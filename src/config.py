@@ -3,14 +3,17 @@ Configuration management module
 """
 
 import os
+import re
 import yaml
 from pathlib import Path
-from typing import Optional
 from dataclasses import dataclass
 from dotenv import load_dotenv
 import logging
 
 logger = logging.getLogger(__name__)
+
+# Simple email validation regex
+EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
 
 
 @dataclass
@@ -170,6 +173,8 @@ def validate_config(config: Config) -> list[str]:
     # Validate omakase credentials
     if not config.omakase.email:
         errors.append("omakase.email is required")
+    elif not EMAIL_REGEX.match(config.omakase.email):
+        errors.append("omakase.email is not a valid email address")
     if not config.omakase.password:
         errors.append("omakase.password is required")
 
@@ -192,8 +197,18 @@ def validate_config(config: Config) -> list[str]:
     # Validate Gmail settings
     if not config.gmail.sender_email:
         errors.append("notification.gmail.sender_email is required")
+    elif not EMAIL_REGEX.match(config.gmail.sender_email):
+        errors.append(
+            "notification.gmail.sender_email is not a valid email address"
+        )
+
     if not config.gmail.receiver_email:
         errors.append("notification.gmail.receiver_email is required")
+    elif not EMAIL_REGEX.match(config.gmail.receiver_email):
+        errors.append(
+            "notification.gmail.receiver_email is not a valid email address"
+        )
+
     if not config.gmail.app_password:
         errors.append(
             "GMAIL_APP_PASSWORD environment variable is required. "

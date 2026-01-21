@@ -4,7 +4,9 @@ Data models for Omakase Monitor
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+
+# Base URL for omakase.in
+OMAKASE_BASE_URL = "https://omakase.in"
 
 
 @dataclass
@@ -12,9 +14,9 @@ class TimeSlot:
     """Represents a restaurant reservation time slot"""
     date: str  # YYYY-MM-DD format
     time: str  # HH:MM format
-    price: Optional[int] = None  # Price in JPY
-    booking_url: Optional[str] = None
-    available_seats: Optional[int] = None
+    price: int | None = None  # Price in JPY
+    booking_url: str | None = None
+    available_seats: int | None = None
 
     def __hash__(self) -> int:
         return hash((self.date, self.time))
@@ -36,12 +38,12 @@ class Restaurant:
     @property
     def detail_url(self) -> str:
         """Full restaurant detail page URL"""
-        return f"https://omakase.in/ja/r/{self.slug}"
+        return f"{OMAKASE_BASE_URL}/ja/r/{self.slug}"
 
     @property
     def api_url(self) -> str:
         """API endpoint for time slots"""
-        return f"https://omakase.in/api/v1/omakase/r/{self.slug}/online_stock_groups"
+        return f"{OMAKASE_BASE_URL}/api/v1/omakase/r/{self.slug}/online_stock_groups"
 
 
 @dataclass
