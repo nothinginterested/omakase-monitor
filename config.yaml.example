@@ -1,0 +1,36 @@
+# Omakase Monitor Configuration
+# Copy this file to config.yaml and fill in your details
+
+# Monitoring settings
+monitor:
+  interval_min: 5            # Minimum interval between checks (minutes)
+  interval_max: 10           # Maximum interval between checks (minutes)
+  random_delay_max: 120      # Maximum random delay between requests (seconds)
+  run_immediately: true      # Run check immediately on startup
+
+# omakase.in account credentials
+omakase:
+  email: "your-email@example.com"
+  password: "your-password"
+
+# Target restaurants to monitor
+# Get the slug from the restaurant URL: https://omakase.in/ja/r/{slug}
+restaurants:
+  - name: "Example Restaurant 1"
+    slug: "abc12345"
+    url: "https://omakase.in/ja/r/abc12345"
+    enabled: true
+
+  - name: "Example Restaurant 2"
+    slug: "xyz67890"
+    url: "https://omakase.in/ja/r/xyz67890"
+    enabled: false  # Set to false to temporarily disable monitoring
+
+# Email notification settings
+notification:
+  gmail:
+    smtp_server: "smtp.gmail.com"
+    smtp_port: 587
+    sender_email: "your-sender@gmail.com"
+    # App Password is set via GMAIL_APP_PASSWORD environment variable in .env
+    receiver_email: "your-receiver@gmail.com"
