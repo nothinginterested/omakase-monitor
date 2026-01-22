@@ -4,12 +4,12 @@ HTTP client for omakase.in API
 
 import json
 import logging
-import re
 from pathlib import Path
 import httpx
 from bs4 import BeautifulSoup
 from src.models import TimeSlot, OMAKASE_BASE_URL
 from src.utils import retry_on_failure, random_delay
+from src.parser import OmakaseParser
 
 logger = logging.getLogger(__name__)
 
@@ -213,15 +213,15 @@ class OmakaseClient:
             # Parse JSON response
             data = response.json()
 
-            # TODO: Parse the actual API response structure
-            # This is a placeholder - actual structure needs to be determined
+            # Parse time slots using the flexible parser
+            time_slots = OmakaseParser.parse_time_slots(data)
+
             logger.info(
-                f"Fetched time slots for {restaurant_slug}: "
-                f"{len(data) if isinstance(data, list) else 'unknown'} items"
+                f"Found {len(time_slots)} available time slots "
+                f"for restaurant {restaurant_slug}"
             )
 
-            # For now, return empty list until we know the API structure
-            return []
+            return time_slots
 
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 401:
